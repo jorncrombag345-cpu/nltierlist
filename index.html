@@ -798,6 +798,10 @@ placeholder="Password"
 LOGIN
 </button>
 
+<button onclick="openTesters()">
+TESTERS
+</button>
+
 <button
 id="logoutBtn"
 onclick="logout()"
@@ -805,6 +809,7 @@ style="display:none;"
 >
 LOGOUT
 </button>
+
 </div>
 
 </div>
@@ -856,6 +861,16 @@ id="playerName"
 placeholder="Player Name"
 >
 
+<input
+type="text"
+id="testerName"
+placeholder="Tester Name"
+>
+
+<button onclick="addTester()">
+ADD TESTER
+</button>
+
 <select id="gamemode">
 
 <option>Mace</option>
@@ -895,7 +910,14 @@ class="deleteAllBtn"
 onclick="deleteAllPlayers()"
 >
 DELETE ALL PLAYERS
-</button>   
+</button>
+
+<button
+class="deleteAllBtn"
+onclick="deleteAllTesters()"
+>
+DELETE ALL TESTERS
+</button>
 
 </div>
 
@@ -903,6 +925,26 @@ DELETE ALL PLAYERS
 
 <div id="leaderboard"></div>
 
+ <!-- TESTERS MODAL -->
+
+<div class="modal" id="testersModal">
+
+    <div class="modalContent">
+
+        <h2>Testers</h2>
+
+        <div id="testersList"></div>
+
+        <button
+            class="closeBtn"
+            onclick="closeTesters()"
+        >
+            Close
+        </button>
+
+    </div>
+
+</div>
 <!-- MODAL -->
 
 <div class="modal" id="modal">
@@ -947,6 +989,15 @@ import {
     onAuthStateChanged,
     signOut
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
   
 const firebaseConfig = {
   apiKey: "AIzaSyDm1vsdX5_QqfeEB5go9hTncKnaqqKHQf0",
@@ -960,6 +1011,14 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.db = db;
+window.collection = collection;
+window.addDoc = addDoc;
+window.getDocs = getDocs;
+window.deleteDoc = deleteDoc;
+window.doc = doc;
 
 window.login = async function() {
 
@@ -1353,7 +1412,112 @@ function closeModal(){
 
 }
 
-loadPlayers();
+async function openTesters() {
+
+    document
+        .getElementById("testersModal")
+        .style.display = "flex";
+
+    await loadTesters();
+}
+
+function closeTesters() {
+
+    document
+        .getElementById("testersModal")
+        .style.display = "none";
+
+}
+
+async function addTester() {
+
+    if (!window.isAdmin) {
+        alert("Admins only");
+        return;
+    }
+
+    const testerName =
+        document.getElementById("testerName").value.trim();
+
+    const gamemode =
+        document.getElementById("gamemode").value;
+
+    if (!testerName) return;
+
+    await addDoc(
+        collection(db, "testers"),
+        {
+            name: testerName,
+            gamemode: gamemode
+        }
+    );
+
+    document.getElementById("testerName").value = "";
+
+    await loadTesters();
+
+    alert("Tester added!");
+
+}
+
+loadTesters();
+
+
+async function loadTesters() {
+
+    const snapshot =
+        await getDocs(
+            collection(db, "testers")
+        );
+
+    const testersList =
+        document.getElementById("testersList");
+
+    testersList.innerHTML = "";
+
+    snapshot.forEach((docSnap) => {
+
+        const tester = docSnap.data();
+
+        testersList.innerHTML += `
+
+        <div class="tier">
+
+            <h2>${tester.name}</h2>
+
+            <p>${tester.gamemode}</p>
+
+            ${window.isAdmin ? `
+
+            <button
+                class="deleteBtn"
+                onclick="removeTester('${docSnap.id}')"
+            >
+                Remove Tester
+            </button>
+
+            ` : ""}
+
+        </div>
+
+        `;
+
+    });
+
+}
+window.removeTester = async function(id) {
+
+    const sure = confirm("Remove this tester?");
+
+    if (!sure) return;
+
+    await deleteDoc(
+        doc(db, "testers", id)
+    );
+
+    loadTesters();
+
+};
 
 </script>
 </body>
