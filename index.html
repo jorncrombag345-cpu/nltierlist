@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-
-<meta charset="UTF-8">
+<meta async function addPlayer(){harset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NL Tiers</title>
 
@@ -1154,49 +1153,51 @@ function setFilter(mode){
 
 async function addPlayer(){
 
-const player =
-document.getElementById("playerName").value;
+    const player =
+        document.getElementById("playerName").value;
 
-const gamemode =
-document.getElementById("gamemode").value;
+    const gamemode =
+        document.getElementById("gamemode").value;
 
-const tier =
-document.getElementById("tier").value;
+    const tier =
+        document.getElementById("tier").value;
 
-if(player === "") return;
+    if(player === "") return;
 
-await supabaseClient
-.from("players")
-.insert([
-{
-player,
-gamemode,
-tier
-}
-]);
+    await supabaseClient
+        .from("players")
+        .insert([
+            {
+                player,
+                gamemode,
+                tier
+            }
+        ]);
 
-document
-.getElementById("playerName")
-.value = "";
+    document
+        .getElementById("playerName")
+        .value = "";
 
-loadPlayers();
+    loadPlayers();
 
-}
+} // <-- THIS WAS MISSING
 
 async function loadPlayers(){
 
-const { data,error } =
-await supabaseClient
-.from("players")
-.select("*");
+    console.log("Current filter:", currentFilter);
 
-if(error){
+    const { data,error } =
+    await supabaseClient
+    .from("players")
+    .select("*");
 
-console.log(error);
+    if(error){
 
-return;
+        console.log(error);
 
-}
+        return;
+
+   }
 
 allData = data;
 
@@ -1460,9 +1461,6 @@ async function addTester() {
 
 }
 
-loadTesters();
-
-
 async function loadTesters() {
 
     const snapshot =
@@ -1518,6 +1516,10 @@ window.removeTester = async function(id) {
     loadTesters();
 
 };
+currentFilter = "ALL";
+
+loadPlayers();
+loadTesters();
 
 </script>
 </body>
