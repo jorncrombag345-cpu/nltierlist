@@ -1,0 +1,8 @@
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
+body{background:#020817;color:#fff;min-height:100vh;padding:25px}
+.background{position:fixed;inset:0;background:radial-gradient(circle at left,rgba(0,255,170,.15),transparent 40%),radial-gradient(circle at right,rgba(0,100,255,.15),transparent 40%),#020817;z-index:-1}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:60px}
+.logo{font-size:48px;font-weight:800}.logo span{color:#00ff99}
+.admin{display:flex;gap:10px}.admin input{padding:16px;background:#111827;color:white;border:1px solid #222;border-radius:16px}
+.admin button{padding:16px 30px;border:none;border-radius:16px;background:linear-gradient(90deg,#00ff99,#00d4ff)}
+.hero{text-align:center}.hero h1{font-size:110px;font-weight:800}

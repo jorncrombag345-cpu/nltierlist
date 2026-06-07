@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NL Tiers</title>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+font-family:'Inter',sans-serif;
+
+background:
+linear-gradient(
+180deg,
+#050816,
+#0b1020,
+#050816
+);
+
+color:white;
+
+min-height:100vh;
+
+overflow-x:hidden;
+}
+
+/* BACKGROUND */
+
+.bg1,.bg2,.bg3{
+
+position:fixed;
+
+border-radius:50%;
+
+filter:blur(160px);
+
+z-index:-1;
+}
+
+.bg1{
+
+width:600px;
+height:600px;
+
+background:#00ff88;
+
+top:-250px;
+left:-250px;
+
+opacity:0.12;
+}
+
+.bg2{
+
+width:700px;
+height:700px;
+
+background:#00d0ff;
+
+bottom:-300px;
+right:-300px;
+
+opacity:0.10;
+}
+
+.bg3{
+
+width:500px;
+height:500px;
+
+background:#7b5cff;
+
+top:200px;
+right:-200px;
+
+opacity:0.10;
+}
+
+/* NAV */
+
+.nav{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:30px 60px;
+}
+
+.logo{
+
+font-size:52px;
+
+font-weight:900;
+
+letter-spacing:2px;
+}
+
+.logo span{
+
+color:#00ff88;
+}
+
+.loginBox{
+
+display:flex;
+
+gap:12px;
+}
+
+.loginBox input{
+
+background:rgba(255,255,255,0.04);
+
+border:1px solid rgba(255,255,255,0.08);
+
+padding:16px 20px;
+
+width:220px;
+
+border-radius:18px;
+
+color:white;
+
+outline:none;
+
+font-size:16px;
+
+backdrop-filter:blur(10px);
+
+transition:.25s;
+}
+
+.loginBox input:focus{
+border-color:#00eaff;
+box-shadow:0 0 20px rgba(0,234,255,.15);
+}
+
+.loginBox button{
+
+border:none;
+
+background:linear-gradient(
+135deg,
+#00ff88,
+#00d0ff
+);
+
+padding:16px 28px;
+
+border-radius:18px;
+
+font-weight:900;
+
+cursor:pointer;
+
+font-size:15px;
+
+transition:.25s;
+}
+
+.loginBox button:hover{
+
+transform:translateY(-2px);
+
+}
+
+/* HERO */
+
+.hero{
+
+text-align:center;
+
+margin-top:30px;
+
+padding:0 20px;
+}
+
+.hero h1{
+
+font-size:130px;
+
+font-weight:900;
+
+background:
+linear-gradient(
+90deg,
+white,
+#8be9ff,
+#00ff88
+);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+}
+
+.hero p{
+
+font-size:22px;
+
+margin-top:10px;
+
+color:#96a0b5;
+}
+
+/* SEARCH */
+
+.searchArea{
+
+max-width:850px;
+
+margin:45px auto;
+
+padding:0 20px;
+}
+
+.searchArea input{
+
+width:100%;
+
+padding:24px;
+
+border-radius:26px;
+
+border:
+1px solid rgba(255,255,255,0.08);
+
+background:
+rgba(255,255,255,0.05);
+
+color:white;
+
+font-size:18px;
+
+outline:none;
+}
+
+/* FILTERS */
+
+.filters{
+
+display:flex;
+
+flex-wrap:wrap;
+
+justify-content:center;
+
+gap:14px;
+
+padding:0 20px;
+
+margin-bottom:45px;
+}
+
+.filters button{
+
+background:
+rgba(255,255,255,0.05);
+
+border:
+1px solid rgba(255,255,255,0.08);
+
+color:white;
+
+padding:14px 20px;
+
+border-radius:18px;
+
+cursor:pointer;
+
+font-weight:800;
+
+transition:0.2s;
+}
+
+.filters button:hover{
+
+background:#00ff88;
+
+color:black;
+
+transform:translateY(-2px);
+}
+
+/* ADMIN */
+
+.admin{
+
+display:none;
+
+width:95%;
+
+max-width:1400px;
+
+margin:auto;
+
+margin-bottom:40px;
+
+padding:30px;
+
+background:
+rgba(255,255,255,0.05);
+
+border:
+1px solid rgba(255,255,255,0.08);
+
+border-radius:35px;
+
+backdrop-filter:blur(15px);
+}
+
+.admin h2{
+
+margin-bottom:20px;
+
+font-size:34px;
+}
+
+.adminGrid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(220px,1fr));
+
+gap:18px;
+}
+
+.adminGrid input,
+.adminGrid select{
+
+background:#12192b;
+
+border:
+1px solid rgba(255,255,255,0.08);
+
+padding:18px;
+
+border-radius:18px;
+
+color:white;
+
+font-size:16px;
+
+outline:none;
+}
+
+.adminGrid button{
+
+border:none;
+
+background:
+linear-gradient(
+135deg,
+#00ff88,
+#00d0ff
+);
+
+padding:18px;
+
+border-radius:18px;
+
+font-weight:900;
+
+cursor:pointer;
+
+font-size:16px;
+}
+
+/* BOARD */
+
+#leaderboard{
+
+width:100%;
+
+max-width:1550px;
+
+margin:auto;
+
+padding:0 25px 80px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:24px;
+}
+
+/* PLAYER CARD */
+
+.player{
+
+background:
+rgba(255,255,255,0.05);
+
+border:
+1px solid rgba(255,255,255,0.08);
+
+border-radius:36px;
+
+padding:28px;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+cursor:pointer;
+
+transition:0.25s;
+
+backdrop-filter:blur(12px);
+}
+
+.player:hover{
+
+transform:
+translateY(-6px)
+scale(1.01);
+
+border:
+1px solid rgba(0,255,136,0.5);
+
+box-shadow:
+0 0 35px rgba(0,255,136,0.12);
+}
+
+.playerLeft{
+
+display:flex;
+
+align-items:center;
+
+gap:22px;
+}
+
+.rank{
+
+width:85px;
+height:85px;
+
+border-radius:26px;
+
+background:
+linear-gradient(
+135deg,
+#ffd54f,
+#ff9800
+);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:30px;
+
+font-weight:900;
+
+color:black;
+}
+
+.avatar{
+
+width:95px;
+height:95px;
+
+border-radius:28px;
+
+background:
+linear-gradient(
+135deg,
+#00ff88,
+#00d0ff
+);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:42px;
+
+font-weight:900;
+
+color:black;
+}
+
+.playerInfo h2{
+
+font-size:42px;
+
+font-weight:900;
+}
+
+.playerInfo p{
+
+margin-top:8px;
+
+color:#9ca5b8;
+
+font-size:17px;
+}
+
+.points{
+
+text-align:right;
+}
+
+.points h3{
+
+font-size:56px;
+
+font-weight:900;
+
+color:#00ff88;
+}
+
+.points p{
+
+margin-top:6px;
+
+color:#9ca5b8;
+}
+
+/* MODAL */
+
+.modal{
+
+position:fixed;
+
+inset:0;
+
+background:
+rgba(0,0,0,0.72);
+
+display:none;
+
+justify-content:center;
+
+align-items:center;
+
+backdrop-filter:blur(10px);
+
+z-index:999;
+}
+
+.modalContent{
+
+width:92%;
+
+max-width:850px;
+
+background:
+linear-gradient(
+145deg,
+#111827,
+#0b1020
+);
+
+padding:40px;
+
+border-radius:40px;
+
+border:
+1px solid rgba(255,255,255,0.08);
+}
+
+.modalTop{
+
+text-align:center;
+
+margin-bottom:35px;
+}
+
+.bigAvatar{
+
+width:150px;
+height:150px;
+
+border-radius:40px;
+
+background:
+linear-gradient(
+135deg,
+#00ff88,
+#00d0ff
+);
+
+margin:auto;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:65px;
+
+font-weight:900;
+
+color:black;
+
+margin-bottom:20px;
+}
+
+.modalName{
+
+font-size:70px;
+
+font-weight:900;
+}
+
+.totalPoints{
+
+margin-top:12px;
+
+font-size:24px;
+
+color:#00ff88;
+}
+
+.tiers{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(180px,1fr));
+
+gap:18px;
+}
+
+.tier{
+
+background:
+rgba(255,255,255,0.04);
+
+padding:24px;
+
+border-radius:24px;
+
+border:
+1px solid rgba(255,255,255,0.08);
+
+text-align:center;
+}
+
+.tier h3{
+
+font-size:22px;
+
+color:#8e98ac;
+}
+
+.tier h2{
+
+margin-top:10px;
+
+font-size:40px;
+
+color:#00ff88;
+}
+
+.tier p{
+
+margin-top:8px;
+
+color:#ffc107;
+
+font-weight:700;
+}
+
+.deleteBtn{
+
+margin-top:14px;
+
+width:100%;
+
+border:none;
+
+background:red;
+
+padding:12px;
+
+border-radius:14px;
+
+font-weight:900;
+
+color:white;
+
+cursor:pointer;
+}
+
+.closeBtn{
+
+width:100%;
+
+margin-top:30px;
+
+border:none;
+
+background:
+linear-gradient(
+135deg,
+#00ff88,
+#00d0ff
+);
+
+padding:18px;
+
+border-radius:18px;
+
+font-size:17px;
+
+font-weight:900;
+
+cursor:pointer;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.hero h1{
+font-size:70px;
+}
+
+.player{
+flex-direction:column;
+align-items:flex-start;
+gap:25px;
+}
+
+.points{
+text-align:left;
+}
+
+.nav{
+flex-direction:column;
+gap:20px;
+}
+
+.modalName{
+font-size:48px;
+}
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="bg1"></div>
+<div class="bg2"></div>
+<div class="bg3"></div>
+
+<div class="nav">
+
+<div class="logo">
+NL<span>TIERS</span>
+</div>
+
+<div class="loginBox">
+
+<input
+type="email"
+id="email"
+placeholder="Email"
+>
+
+<input
+type="password"
+id="password"
+placeholder="Password"
+>
+
+<button onclick="login()">
+LOGIN
+</button>
+
+<button
+id="logoutBtn"
+onclick="logout()"
+style="display:none;"
+>
+LOGOUT
+</button>
+</div>
+
+</div>
+
+<div class="hero">
+
+<h1>Leaderboard</h1>
+
+<p>Best Competitive Minecraft Players</p>
+
+</div>
+
+<div class="searchArea">
+
+<input
+type="text"
+id="searchInput"
+placeholder="Search player..."
+onkeyup="loadPlayers()"
+>
+
+</div>
+
+<div class="filters">
+
+<button onclick="setFilter('ALL')">ALL</button>
+<button onclick="setFilter('Mace')">MACE</button>
+<button onclick="setFilter('Sword')">SWORD</button>
+<button onclick="setFilter('Spear')">SPEAR</button>
+<button onclick="setFilter('UHC')">UHC</button>
+<button onclick="setFilter('Axe')">AXE</button>
+<button onclick="setFilter('Speed')">SPEED</button>
+<button onclick="setFilter('Vanilla')">VANILLA</button>
+<button onclick="setFilter('DIA SMP')">DIA SMP</button>
+<button onclick="setFilter('Cart')">CART</button>
+<button onclick="setFilter('Creeper')">CREEPER</button>
+
+</div>
+
+<div class="admin" id="adminPanel">
+
+<h2>Admin Panel</h2>
+
+<div class="adminGrid">
+
+<input
+type="text"
+id="playerName"
+placeholder="Player Name"
+>
+
+<select id="gamemode">
+
+<option>Mace</option>
+<option>Sword</option>
+<option>Spear</option>
+<option>UHC</option>
+<option>Axe</option>
+<option>Speed</option>
+<option>Vanilla</option>
+<option>DIA SMP</option>
+<option>Cart</option>
+<option>Creeper</option>
+
+</select>
+
+<select id="tier">
+
+<option>HT1</option>
+<option>LT1</option>
+<option>HT2</option>
+<option>LT2</option>
+<option>HT3</option>
+<option>LT3</option>
+<option>HT4</option>
+<option>LT4</option>
+<option>HT5</option>
+<option>LT5</option>
+
+</select>
+
+<button onclick="addPlayer()">
+ADD TIER
+</button>
+ 
+<button
+class="deleteAllBtn"
+onclick="deleteAllPlayers()"
+>
+DELETE ALL PLAYERS
+</button>   
+
+</div>
+
+</div>
+
+<div id="leaderboard"></div>
+
+<!-- MODAL -->
+
+<div class="modal" id="modal">
+
+<div class="modalContent">
+
+<div class="modalTop">
+
+<div class="bigAvatar" id="bigAvatar">
+A
+</div>
+
+<div class="modalName" id="modalName">
+Player
+</div>
+
+<div class="totalPoints" id="totalPoints">
+0 Points
+</div>
+
+</div>
+
+<div class="tiers" id="modalTiers"></div>
+
+<button
+class="closeBtn"
+onclick="closeModal()"
+>
+Close
+</button>
+
+</div>
+
+</div>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+  
+const firebaseConfig = {
+  apiKey: "AIzaSyDm1vsdX5_QqfeEB5go9hTncKnaqqKHQf0",
+  authDomain: "nltiers.firebaseapp.com",
+  projectId: "nltiers",
+  storageBucket: "nltiers.firebasestorage.app",
+  messagingSenderId: "15766431640",
+  appId: "1:15766431640:web:6bd529c17f03437d692ded",
+  measurementId: "G-WMRN22555J"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.login = async function() {
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    try {
+
+        const userCredential =
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+        console.log(
+            "Logged in:",
+            userCredential.user.email
+        );
+
+    } catch (err) {
+
+        alert(err.message);
+
+    }
+
+};
+
+window.logout = async function() {
+
+    await signOut(auth);
+
+};
+
+  onAuthStateChanged(auth, (user) => {
+
+    console.log("Auth state:", user);
+
+    const emailInput =
+        document.getElementById("email");
+
+    const passwordInput =
+        document.getElementById("password");
+
+    const logoutBtn =
+        document.getElementById("logoutBtn");
+
+    const adminPanel =
+        document.getElementById("adminPanel");
+
+    const loginBtn =
+        document.querySelector(
+            '.loginBox button:not(#logoutBtn)'
+        );
+
+    if (user) {
+
+        window.isAdmin = true;
+
+      adminPanel.style.display = "block";
+
+        emailInput.style.display = "none";
+        passwordInput.style.display = "none";
+
+        loginBtn.style.display = "none";
+        logoutBtn.style.display = "inline-block";
+
+    } else {
+      window.isAdmin = false;
+
+        adminPanel.style.display = "none";
+
+        emailInput.style.display = "";
+        passwordInput.style.display = "";
+
+        loginBtn.style.display = "";
+        logoutBtn.style.display = "none";
+
+    }
+
+});
+</script>
+
+<script>
+    
+const SUPABASE_URL =
+"https://mgtwbthpqinyxrcnglwt.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_kj1HG03vn4ZMqDgC8zWzhA_CRNDty9O";
+
+const supabaseClient =
+supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+
+
+window.isAdmin = false;
+
+let currentFilter = "ALL";
+
+let allData = [];
+
+const tierPoints = {
+
+"LT5":1,
+"HT5":2,
+"LT4":5,
+"HT4":10,
+"LT3":12,
+"HT3":15,
+"LT2":18,
+"HT2":20,
+"LT1":25,
+"HT1":30
+
+};
+
+// Firebase Authentication handles login
+
+function setFilter(mode){
+
+currentFilter = mode;
+
+loadPlayers();
+
+}
+
+async function addPlayer(){
+
+const player =
+document.getElementById("playerName").value;
+
+const gamemode =
+document.getElementById("gamemode").value;
+
+const tier =
+document.getElementById("tier").value;
+
+if(player === "") return;
+
+await supabaseClient
+.from("players")
+.insert([
+{
+player,
+gamemode,
+tier
+}
+]);
+
+document
+.getElementById("playerName")
+.value = "";
+
+loadPlayers();
+
+}
+
+async function loadPlayers(){
+
+const { data,error } =
+await supabaseClient
+.from("players")
+.select("*");
+
+if(error){
+
+console.log(error);
+
+return;
+
+}
+
+allData = data;
+
+const board =
+document.getElementById("leaderboard");
+
+board.innerHTML = "";
+
+let grouped = {};
+
+const search =
+document
+.getElementById("searchInput")
+.value
+.toLowerCase();
+
+data.forEach(entry=>{
+
+if(
+currentFilter !== "ALL" &&
+entry.gamemode !== currentFilter
+){
+return;
+}
+
+if(
+!entry.player
+.toLowerCase()
+.includes(search)
+){
+return;
+}
+
+if(!grouped[entry.player]){
+
+grouped[entry.player] = 0;
+
+}
+
+grouped[entry.player] +=
+tierPoints[entry.tier];
+
+});
+
+const sorted =
+Object.entries(grouped)
+.sort((a,b)=>b[1]-a[1]);
+
+sorted.forEach(([name,points],index)=>{
+
+board.innerHTML += `
+
+<div
+class="player"
+onclick="openPlayer('${name}')"
+>
+
+<div class="playerLeft">
+
+<div class="rank">
+#${index+1}
+</div>
+
+<div class="avatar">
+${name.charAt(0).toUpperCase()}
+</div>
+
+<div class="playerInfo">
+
+<h2>${name}</h2>
+
+<p>Competitive Player</p>
+
+</div>
+
+</div>
+
+<div class="points">
+
+<h3>${points}</h3>
+
+<p>Total Points</p>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+function openPlayer(player){
+
+document
+.getElementById("modal")
+.style.display = "flex";
+
+document
+.getElementById("modalName")
+.innerHTML = player;
+
+document
+.getElementById("bigAvatar")
+.innerHTML =
+player.charAt(0).toUpperCase();
+
+const stats =
+allData.filter(
+x=>x.player===player
+);
+
+let total = 0;
+
+let html = "";
+
+stats.forEach(entry=>{
+
+total += tierPoints[entry.tier];
+
+html += `
+
+<div class="tier">
+
+<h3>${entry.gamemode}</h3>
+
+<h2>${entry.tier}</h2>
+
+<p>
+${tierPoints[entry.tier]} points
+</p>
+
+${window.isAdmin ? `
+
+<button
+class="deleteBtn"
+onclick="deleteTier(${entry.id})"
+>
+Delete Tier
+</button>
+
+` : ""}
+
+</div>
+
+`;
+
+});
+
+document
+.getElementById("totalPoints")
+.innerHTML =
+total + " Total Points";
+
+document
+.getElementById("modalTiers")
+.innerHTML = html;
+
+}
+
+async function deleteTier(id){
+
+    const sure =
+        confirm("Delete this tier?");
+
+    if(!sure) return;
+
+    await supabaseClient
+        .from("players")
+        .delete()
+        .eq("id", id);
+
+    closeModal();
+
+    loadPlayers();
+
+}
+
+async function deleteAllPlayers() {
+
+    if (!window.isAdmin) {
+        alert("Admins only");
+        return;
+    }
+
+    const answer = prompt(
+        "Type DELETE to remove all players"
+    );
+
+    if (answer !== "DELETE") return;
+
+    const { error } = await supabaseClient
+        .from("players")
+        .delete()
+        .neq("id", 0);
+
+    if (error) {
+        alert(error.message);
+        return;
+    }
+
+    alert("All players deleted.");
+
+    loadPlayers();
+}
+ 
+ function closeModal(){
+
+    document
+        .getElementById("modal")
+        .style.display = "none";
+
+}
+
+</Script> 
+</body>
+</html>
