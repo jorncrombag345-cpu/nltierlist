@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta async function addPlayer(){harset="UTF-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NL Tiers</title>
 
@@ -569,6 +569,10 @@ width:92%;
 
 max-width:850px;
 
+max-height:85vh;
+
+overflow-y:auto;
+
 background:
 linear-gradient(
 145deg,
@@ -582,6 +586,23 @@ border-radius:40px;
 
 border:
 1px solid rgba(255,255,255,0.08);
+}
+ .modalContent::-webkit-scrollbar{
+    width:10px;
+}
+
+.modalContent::-webkit-scrollbar-track{
+    background:#111827;
+    border-radius:10px;
+}
+
+.modalContent::-webkit-scrollbar-thumb{
+    background:#00ff88;
+    border-radius:10px;
+}
+
+.modalContent::-webkit-scrollbar-thumb:hover{
+    background:#00d0ff;
 }
 
 .modalTop{
